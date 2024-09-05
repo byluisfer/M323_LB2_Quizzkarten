@@ -15,6 +15,7 @@ const MSGS = {
   UPDATE_QUESTION: "UPDATE_QUESTION",
   UPDATE_ANSWER: "UPDATE_ANSWER",
   ADD_CARD: "ADD_CARD",
+  DELETE_CARD: "DELETE_CARD",
 };
 
 // View function which represents the UI as HTML-tag functions
@@ -22,7 +23,7 @@ function view(dispatch, model) {
   return div([
     button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.SHOW_POPUP) }, "+ Add Flashcard"),
     model.showPopup ? addCardForm(dispatch, model) : null,
-    ...model.cards.map(card => seeCardStyle(card)),
+    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch)),
   ]);
 }
 
@@ -53,11 +54,11 @@ function addCardForm(dispatch, model) {
 }
 
 // Function to see the created Card in the html
-function seeCardStyle(card) {
+function seeCardStyle(card, index, dispatch) {
   return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/4 relative" }, [
     button({
       className: "absolute top-2 right-2",
-      onclick: () => { },
+      onclick: () => dispatch({ type: MSGS.DELETE_CARD, index }), // Pasamos el índice para borrar
     }, "❌"),
     p({ className: "font-bold" }, "Question"),
     p({ className: "text-lg mb-4" }, card.question),
@@ -98,6 +99,12 @@ function update(msg, model) {
         cards: [...model.cards, newCard], 
         newQuestion: "", 
         newAnswer: "" 
+      };
+
+    case MSGS.DELETE_CARD:
+      return {
+        ...model,
+        cards: model.cards.filter((_, i) => i !== msg.index) 
       };
 
     default:
