@@ -1,22 +1,30 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modul 323 - Example Project</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="h-screen w-screen">
-    <header class="p-4">
-      <div class="max-w-2xl m-auto flex items-center gap-4 border-b-gray-200 border-b pb-4">
-        <img src="logo.png" alt="Logo" class="w-10" />
-        <span class="font-mono font-bold">Modul 323 - Example Project</span>
-      </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./output.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>Weather App</title>
+</head>
+<body class="mx-96">
+    <header>
+        <img src="logo.png" alt="Logo for the header" class="max-w-16 py-4">    
+        <h1 class="text-4xl font-bold -mt-24 ml-24 py-6">Modul 323 - Weather App</h1>
+        <hr>
     </header>
+
+    <section>
+        <input class= "bg-white border w-96 mt-2 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-400" placeholder="Enter location..." type="text">
+        <button class="bg-blue-500 text-white text-lg px-4 py-1 ml-2 rounded-md">Add</button>
+    </section>
+
     <main class="max-w-lg m-auto py-4 flex flex-col items-center gap-4" id="app"></main>
-    <footer class="p-4">
-      <div class="max-w-2xl m-auto text-center border-t-gray-200 border-t pt-4">This is a fancy footer 🎩</div>
+
+    <footer>
+        <hr>
+        <p class="text-xl text-center mt-5">🔥 Copyright© Luis Fernandez, dont copy this I see you 🔥</p>
     </footer>
-    <script src="bundle.js"></script>
-  </body>
+    <script type="module" src="index.js"></script>
+</body>
 </html>
