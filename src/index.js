@@ -16,21 +16,29 @@ const MSGS = {
   UPDATE_ANSWER: "UPDATE_ANSWER",
   ADD_CARD: "ADD_CARD",
   DELETE_CARD: "DELETE_CARD",
+  EDIT_CARD: "EDIT_CARD", 
+  SAVE_CARD: "SAVE_CARD",
 };
 
 // View function which represents the UI as HTML-tag functions
 function view(dispatch, model) {
-  return div([
+  return div({ className: "w-full" }, [
     button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.SHOW_POPUP) }, "+ Add Flashcard"),
     model.showPopup ? addCardForm(dispatch, model) : null,
-    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch)),
+    div({ className: "flex flex-wrap gap-4 mt-4" }, 
+      ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch))
+    )
   ]);
 }
 
 // Function to define the form of the Card (popup)
 function addCardForm(dispatch, model) {
+  const isEditing = model.editingCardIndex !== null;
   return div({ className: "fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center" }, [
-    form({ className: "bg-white p-6 rounded-lg shadow-lg", onsubmit: (e) => mangeFormCard(e, dispatch, model) }, [
+    form({
+      className: "bg-white p-6 rounded-lg shadow-lg",
+      onsubmit: (e) => mangeFormCard(e, dispatch, model)
+    }, [
       label({ className: "block text-sm font-bold mb-2" }, "Question:"),
       input({
         className: "border p-2 w-full mb-4",
@@ -46,7 +54,7 @@ function addCardForm(dispatch, model) {
         oninput: (e) => dispatch({ type: MSGS.UPDATE_ANSWER, value: e.target.value }),
       }),
       div({ className: "flex justify-between" }, [
-        button({ className: btnStyle, type: "submit" }, "Add Card"),
+        button({ className: btnStyle, type: "submit" }, isEditing ? "Save Changes" : "Add Card"),
         button({ className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded", onclick: () => dispatch(MSGS.CLOSE_POPUP) }, "Cancel"),
       ])
     ])
@@ -55,11 +63,17 @@ function addCardForm(dispatch, model) {
 
 // Function to see the created Card in the html
 function seeCardStyle(card, index, dispatch) {
-  return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/4 relative" }, [
+  return div({ className: "bg-yellow-200 p-4 rounded-lg w-[200px] h-auto relative" }, [
+    button({
+      className: "absolute top-2 right-10",
+      onclick: () => dispatch({ type: MSGS.EDIT_CARD, card, index }),
+    }, "✏️"),
+
     button({
       className: "absolute top-2 right-2",
-      onclick: () => dispatch({ type: MSGS.DELETE_CARD, index }), // Pasamos el índice para borrar
+      onclick: () => dispatch({ type: MSGS.DELETE_CARD, index }),
     }, "❌"),
+
     p({ className: "font-bold" }, "Question"),
     p({ className: "text-lg mb-4" }, card.question),
     button({
@@ -77,10 +91,22 @@ function seeCardStyle(card, index, dispatch) {
 function update(msg, model) {
   switch (msg.type) {
     case MSGS.SHOW_POPUP:
-      return { ...model, showPopup: true };
+      return {
+        ...model,
+        showPopup: true,
+        newQuestion: "",
+        newAnswer: "",
+        editingCardIndex: null
+      };
 
     case MSGS.CLOSE_POPUP:
-      return { ...model, showPopup: false };
+      return {
+        ...model,
+        showPopup: false,
+        newQuestion: "",
+        newAnswer: "",
+        editingCardIndex: null
+      };
 
     case MSGS.UPDATE_QUESTION:
       return { ...model, newQuestion: msg.value };
@@ -93,18 +119,42 @@ function update(msg, model) {
         question: model.newQuestion,
         answer: model.newAnswer,
       };
-      return { 
-        ...model, 
-        showPopup: false, 
-        cards: [...model.cards, newCard], 
+      return {
+        ...model,
+        cards: [...model.cards, newCard],
+        showPopup: false,
+        newQuestion: "",
+        newAnswer: "",
+      };
+
+    case MSGS.EDIT_CARD:
+      return {
+        ...model,
+        showPopup: true,                
+        newQuestion: msg.card.question, 
+        newAnswer: msg.card.answer,
+        editingCardIndex: msg.index    
+      };
+
+    case MSGS.SAVE_CARD:
+      const updatedCards = model.cards.map((card, i) =>
+        i === model.editingCardIndex
+          ? { ...card, question: model.newQuestion, answer: model.newAnswer }
+          : card
+      );
+      return {
+        ...model,
+        cards: updatedCards,
+        showPopup: false,
         newQuestion: "", 
-        newAnswer: "" 
+        newAnswer: "",
+        editingCardIndex: null
       };
 
     case MSGS.DELETE_CARD:
       return {
         ...model,
-        cards: model.cards.filter((_, i) => i !== msg.index) 
+        cards: model.cards.filter((_, i) => i !== msg.index)
       };
 
     default:
@@ -114,8 +164,13 @@ function update(msg, model) {
 
 // Manage if the created card will see in the html or not
 function mangeFormCard(e, dispatch, model) {
+  e.preventDefault();
   if (model.newQuestion && model.newAnswer) {
-    dispatch({ type: MSGS.ADD_CARD });
+    if (model.editingCardIndex !== null) {
+      dispatch({ type: MSGS.SAVE_CARD });
+    } else {
+      dispatch({ type: MSGS.ADD_CARD });
+    }
   }
 }
 
