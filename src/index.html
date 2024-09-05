@@ -1,30 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./output.css" rel="stylesheet">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quizkarten</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/x-icon" href="logo.png">
-    <title>Weather App</title>
-</head>
-<body class="mx-96">
+  </head>
+  <body class="mx-96">
     <header>
-        <img src="logo.png" alt="Logo for the header" class="max-w-16 py-4">    
-        <h1 class="text-4xl font-bold -mt-24 ml-24 py-6">Modul 323 - Weather App</h1>
+        <img src="logo.png" alt="Logo for the header" class="max-w-16 py-5">    
+        <h1 class="text-3xl font-black -mt-24 ml-24 py-6">Modul 323 - Quizkarten</h1>
         <hr>
     </header>
 
-    <section>
-        <input class= "bg-white border w-96 mt-2 border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-400" placeholder="Enter location..." type="text">
-        <button class="bg-blue-500 text-white text-lg px-4 py-1 ml-2 rounded-md">Add</button>
-    </section>
+    <main class="py-4 gap-4" id="app"></main>
 
-    <main class="max-w-lg m-auto py-4 flex flex-col items-center gap-4" id="app"></main>
-
-    <footer>
+    <footer class="mt-64">
         <hr>
-        <p class="text-xl text-center mt-5">🔥 Copyright© Luis Fernandez, dont copy this I see you 🔥</p>
+        <p class="text-xl text-center mt-5">🔥 Copyright© Luis Fernandez 2024 🔥</p>
     </footer>
-    <script type="module" src="index.js"></script>
-</body>
+
+    <script src="index.js"></script>
+  </body>
 </html>
