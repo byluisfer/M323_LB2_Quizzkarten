@@ -63,7 +63,7 @@ function addCardForm(dispatch, model) {
 
 // Function to see the created Card in the html
 function seeCardStyle(card, index, dispatch) {
-  return div({ className: "bg-yellow-200 p-4 rounded-lg w-[200px] h-auto relative" }, [
+  return div({ className: "bg-yellow-200 p-4 rounded-lg w-60 h-auto relative" }, [
     button({
       className: "absolute top-2 right-10",
       onclick: () => dispatch({ type: MSGS.EDIT_CARD, card, index }),
