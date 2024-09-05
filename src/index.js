@@ -5,7 +5,7 @@ import createElement from "virtual-dom/create-element";
 // allows using html tags as functions in javascript
 const { div, button, input, form, label, p } = hh(h);
 
-// A combination of Tailwind classes which represent a (more or less nice) button style
+// Styles
 const btnStyle = "bg-gradient-to-r from-red-500 to-blue-500 hover:from-red-600 hover:to-blue-600 text-white font-bold py-2 px-4 rounded";
 
 // Messages which can be used to update the model
@@ -21,15 +21,15 @@ const MSGS = {
 function view(dispatch, model) {
   return div([
     button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.SHOW_POPUP) }, "+ Add Flashcard"),
-    model.showPopup ? addFlashcardForm(dispatch, model) : null,
-    ...model.flashcards.map(card => renderCard(card)),
+    model.showPopup ? addCardForm(dispatch, model) : null,
+    ...model.cards.map(card => seeCardStyle(card)),
   ]);
 }
 
-// Function to show the form for adding a new flashcard
-function addFlashcardForm(dispatch, model) {
+// Function to define the form of the Card (popup)
+function addCardForm(dispatch, model) {
   return div({ className: "fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center" }, [
-    form({ className: "bg-white p-6 rounded-lg shadow-lg", onsubmit: (e) => handleFormSubmit(e, dispatch, model) }, [
+    form({ className: "bg-white p-6 rounded-lg shadow-lg", onsubmit: (e) => mangeFormCard(e, dispatch, model) }, [
       label({ className: "block text-sm font-bold mb-2" }, "Question:"),
       input({
         className: "border p-2 w-full mb-4",
@@ -52,19 +52,23 @@ function addFlashcardForm(dispatch, model) {
   ]);
 }
 
-// Function to render a flashcard
-function renderCard(card) {
-  return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/4 relative" }, [ // Añado 'relative' al contenedor
+// Function to see the created Card in the html
+function seeCardStyle(card) {
+  return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/4 relative" }, [
     button({
       className: "absolute top-2 right-2",
-      onclick: () => { /* Aquí puedes agregar funcionalidad para eliminar la tarjeta */ },
+      onclick: () => { },
     }, "❌"),
     p({ className: "font-bold" }, "Question"),
     p({ className: "text-lg mb-4" }, card.question),
     button({
       className: "text-blue-500 hover:underline",
-      onclick: () => { /* Aquí puedes agregar funcionalidad para mostrar la respuesta */ },
-    }, "Show Answer")
+      onclick: (e) => {
+        e.target.style.display = "none";
+        e.target.nextElementSibling.style.display = "block";
+      },
+    }, "Show Answer"),
+    p({ className: "text-lg mb-4", style: "display: none;" }, card.answer)
   ]);
 }
 
@@ -91,7 +95,7 @@ function update(msg, model) {
       return { 
         ...model, 
         showPopup: false, 
-        flashcards: [...model.flashcards, newCard], 
+        cards: [...model.cards, newCard], 
         newQuestion: "", 
         newAnswer: "" 
       };
@@ -101,9 +105,8 @@ function update(msg, model) {
   }
 }
 
-// Handles form submission
-function handleFormSubmit(e, dispatch, model) {
-  e.preventDefault();
+// Manage if the created card will see in the html or not
+function mangeFormCard(e, dispatch, model) {
   if (model.newQuestion && model.newAnswer) {
     dispatch({ type: MSGS.ADD_CARD });
   }
@@ -127,7 +130,7 @@ function app(initModel, update, view, node) {
 
 // The initial model when the app starts
 const initModel = {
-  flashcards: [],
+  cards: [],
   showPopup: false,
   newQuestion: "",
   newAnswer: "",
