@@ -10,33 +10,31 @@ const btnStyle = "bg-gradient-to-r from-red-500 to-blue-500 hover:from-red-600 h
 
 // Messages which can be used to update the model
 const MSGS = {
-  SHOW_POPUP: "SHOW_POPUP",
+  OPEN_POPUP: "OPEN_POPUP",
   CLOSE_POPUP: "CLOSE_POPUP",
-  UPDATE_QUESTION: "UPDATE_QUESTION",
-  UPDATE_ANSWER: "UPDATE_ANSWER",
   ADD_CARD: "ADD_CARD",
   DELETE_CARD: "DELETE_CARD",
-  EDIT_CARD: "EDIT_CARD", 
+  UPDATE_QUESTION: "UPDATE_QUESTION",
+  UPDATE_ANSWER: "UPDATE_ANSWER",
+  EDIT_CARD: "EDIT_CARD",
   SAVE_CARD: "SAVE_CARD",
 };
 
 // View function which represents the UI as HTML-tag functions
 function view(dispatch, model) {
-  return div({ className: "w-full" }, [
-    button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.SHOW_POPUP) }, "+ Add Flashcard"),
+  return div([
+    button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.OPEN_POPUP) }, "+ Add Flashcard"),
     model.showPopup ? addCardForm(dispatch, model) : null,
-    div({ className: "flex flex-wrap gap-4 mt-4" }, 
-      ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch))
-    )
+    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch))
   ]);
 }
 
 // Function to define the form of the Card (popup)
 function addCardForm(dispatch, model) {
   const isEditing = model.editingCardIndex !== null;
-  return div({ className: "fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center" }, [
+  return div({ className: "fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50" }, [
     form({
-      className: "bg-white p-6 rounded-lg shadow-lg",
+      className: "bg-white p-6 rounded-lg",
       onsubmit: (e) => mangeFormCard(e, dispatch, model)
     }, [
       label({ className: "block text-sm font-bold mb-2" }, "Question:"),
@@ -63,7 +61,7 @@ function addCardForm(dispatch, model) {
 
 // Function to see the created Card in the html
 function seeCardStyle(card, index, dispatch) {
-  return div({ className: "bg-yellow-200 p-4 rounded-lg w-60 h-auto relative" }, [
+  return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/4 relative" }, [
     button({
       className: "absolute top-2 right-10",
       onclick: () => dispatch({ type: MSGS.EDIT_CARD, card, index }),
@@ -90,7 +88,7 @@ function seeCardStyle(card, index, dispatch) {
 // Update function which takes a message and a model and returns a new/updated model
 function update(msg, model) {
   switch (msg.type) {
-    case MSGS.SHOW_POPUP:
+    case MSGS.OPEN_POPUP:
       return {
         ...model,
         showPopup: true,
@@ -108,12 +106,6 @@ function update(msg, model) {
         editingCardIndex: null
       };
 
-    case MSGS.UPDATE_QUESTION:
-      return { ...model, newQuestion: msg.value };
-
-    case MSGS.UPDATE_ANSWER:
-      return { ...model, newAnswer: msg.value };
-
     case MSGS.ADD_CARD:
       const newCard = {
         question: model.newQuestion,
@@ -125,7 +117,19 @@ function update(msg, model) {
         showPopup: false,
         newQuestion: "",
         newAnswer: "",
+      }; 
+      
+    case MSGS.DELETE_CARD:
+      return {
+        ...model,
+        cards: model.cards.filter((_, i) => i !== msg.index)
       };
+
+    case MSGS.UPDATE_QUESTION:
+      return { ...model, newQuestion: msg.value };
+
+    case MSGS.UPDATE_ANSWER:
+      return { ...model, newAnswer: msg.value };
 
     case MSGS.EDIT_CARD:
       return {
@@ -149,12 +153,6 @@ function update(msg, model) {
         newQuestion: "", 
         newAnswer: "",
         editingCardIndex: null
-      };
-
-    case MSGS.DELETE_CARD:
-      return {
-        ...model,
-        cards: model.cards.filter((_, i) => i !== msg.index)
       };
 
     default:
