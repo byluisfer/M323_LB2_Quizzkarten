@@ -83,7 +83,6 @@ function seeCardStyle(card, index, dispatch) {
     button({
       className: "text-blue-500 hover:underline",
       onclick: (e) => {
-        e.target.style.display = "none"; // https://www.w3schools.com/jsref/prop_style_display.asp
         e.target.nextElementSibling.style.display = "block"; // https://www.w3schools.com/jsref/prop_element_nextelementsibling.asp
       },
     }, "Show Answer"),
@@ -169,7 +168,6 @@ function update(msg, model) {
 
 // Manage if the created card will see in the html or not
 function mangeFormCard(e, dispatch, model) {
-  e.preventDefault();
   if (model.newQuestion && model.newAnswer) {
     if (model.editingCardIndex !== null) {
       dispatch({ type: MSGS.SAVE_CARD });
