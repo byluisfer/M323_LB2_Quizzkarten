@@ -93,17 +93,17 @@ function seeCardStyle(card, index, dispatch) {
     // Hide rating buttons
     div({ className: "mt-2", style: "display: none; justify-content: space-around;" }, [
       button({
-        className: btnStyle,
+        className: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
         onclick: () => dispatch({ type: MSGS.RATE_CARD, index, score: 0 }), 
         disabled: card.scored  // Disable if already rated
       }, "Bad"),
       button({
-        className: btnStyle,
+        className: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded",
         onclick: () => dispatch({ type: MSGS.RATE_CARD, index, score: 1 }),
         disabled: card.scored  // Disable if already rated
       }, "Good"),
       button({
-        className: btnStyle,
+        className: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         onclick: () => dispatch({ type: MSGS.RATE_CARD, index, score: 2 }),
         disabled: card.scored  // Disable if already rated
       }, "Great")
