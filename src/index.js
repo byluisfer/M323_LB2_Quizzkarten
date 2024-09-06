@@ -24,14 +24,14 @@ const MSGS = {
 function view(dispatch, model) {
   return div([
     button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.OPEN_POPUP) }, "+ Add Flashcard"),
-    model.showPopup ? addCardForm(dispatch, model) : null,// https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Conditional_operator  // si no uso el ? : entonces el popup se ve todo el rato
+    model.showPopup ? addCardForm(dispatch, model) : null,// https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Conditional_operator  // 
 
     div({ className: "flex justify-between w-full px-4 mb-4 mt-4" }, [
       p({ className: "text-lg font-bold" }, "Your Flashcards"),  
       p({ className: "text-lg font-bold" }, "Ranking")      
     ]),
 
-    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch)) // Itera sobre cada tarjeta y lo pasa a la function (seeCardStyle)
+    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch)) // Iterates over each card and passes it to the function (seeCardStyle)
   ]);
 }
 
@@ -95,7 +95,7 @@ function update(msg, model) {
   switch (msg.type) {
     case MSGS.OPEN_POPUP:
       return {
-        ...model, // Copia todas las propiedades actuales del modelo
+        ...model, // Copies all current properties of the model
         showPopup: true,
         newQuestion: "",
         newAnswer: "",
@@ -111,8 +111,8 @@ function update(msg, model) {
 
     case MSGS.ADD_CARD:
       const newCard = {
-        question: model.newQuestion, // Usa el valor de newQuestion
-        answer: model.newAnswer, // Usa el valor de newAnswer
+        question: model.newQuestion, // Use the value of newQuestion
+        answer: model.newAnswer, // Use the value of newAnswer
       };
       return {
         ...model,
@@ -123,7 +123,7 @@ function update(msg, model) {
     case MSGS.DELETE_CARD:
       return {
         ...model,
-        cards: model.cards.filter((_,i) => i !== msg.index) // KAI Tool
+        cards: model.cards.filter((_, i) => i !== msg.index) // AI Tool
       };
 
     case MSGS.UPDATE_QUESTION:
@@ -141,7 +141,7 @@ function update(msg, model) {
         editingCardIndex: msg.index    
       };
 
-    // KAI Tool
+    // AI Tool
     case MSGS.SAVE_CARD:
       const updatedCards = model.cards.map((card, i) =>
         i === model.editingCardIndex
