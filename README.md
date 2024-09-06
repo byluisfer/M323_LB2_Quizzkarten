@@ -20,11 +20,15 @@ Welcome to Quizkarten app, a guessing card game app.
 git clone https://github.com/byluisfer/M323_LB2_Quizzkarten.git
 cd M323_LB2_Quizzkarten
 ```
-2. Start the server:
+2. Install webpack-dev-server:
+```bash
+npm install webpack-dev-server --save-dev
+```
+3. Start the server:
 ```bash
 npm run dev
 ```
-3. Open the app in your browser:
+4. Open the app in your browser:
 ```bash
 http://localhost:9000
 ```
