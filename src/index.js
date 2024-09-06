@@ -83,8 +83,8 @@ function seeCardStyle(card, index, dispatch) {
     button({
       className: "text-blue-500 hover:underline",
       onclick: (e) => {
-        e.target.style.display = "none";
-        e.target.nextElementSibling.style.display = "block";
+        e.target.style.display = "none"; // https://www.w3schools.com/jsref/prop_style_display.asp
+        e.target.nextElementSibling.style.display = "block"; // https://www.w3schools.com/jsref/prop_element_nextelementsibling.asp
       },
     }, "Show Answer"),
     p({ className: "text-lg mb-4", style: "display: none;" }, card.answer)
@@ -128,7 +128,7 @@ function update(msg, model) {
     case MSGS.DELETE_CARD:
       return {
         ...model,
-        cards: model.cards.filter((_,i) => i !== msg.index) // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+        cards: model.cards.filter((_,i) => i !== msg.index) // KAI Tool
       };
 
     case MSGS.UPDATE_QUESTION:
@@ -146,6 +146,7 @@ function update(msg, model) {
         editingCardIndex: msg.index    
       };
 
+    // KAI Tool
     case MSGS.SAVE_CARD:
       const updatedCards = model.cards.map((card, i) =>
         i === model.editingCardIndex
