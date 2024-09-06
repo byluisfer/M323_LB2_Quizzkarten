@@ -95,7 +95,7 @@ function update(msg, model) {
   switch (msg.type) {
     case MSGS.OPEN_POPUP:
       return {
-        ...model,
+        ...model, // Copia todas las propiedades actuales del modelo
         showPopup: true,
         newQuestion: "",
         newAnswer: "",
@@ -106,22 +106,18 @@ function update(msg, model) {
       return {
         ...model,
         showPopup: false,
-        newQuestion: "",
-        newAnswer: "",
         editingCardIndex: null
       };
 
     case MSGS.ADD_CARD:
       const newCard = {
-        question: model.newQuestion,
-        answer: model.newAnswer,
+        question: model.newQuestion, // Usa el valor de newQuestion
+        answer: model.newAnswer, // Usa el valor de newAnswer
       };
       return {
         ...model,
         cards: [...model.cards, newCard],
         showPopup: false,
-        newQuestion: "",
-        newAnswer: "",
       }; 
       
     case MSGS.DELETE_CARD:
@@ -166,7 +162,7 @@ function update(msg, model) {
   }
 }
 
-// Manage if the created card will see in the html or not
+// Manage if we are editing or creating a card
 function mangeFormCard(e, dispatch, model) {
   if (model.newQuestion && model.newAnswer) {
     if (model.editingCardIndex !== null) {
