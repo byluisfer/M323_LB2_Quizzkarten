@@ -113,7 +113,7 @@ function seeCardStyle(card, index, dispatch) {
   ]);
 }
 
-// https://www.w3schools.com/jsref/prop_element_nextelementsibling.asp
+// Update function which takes a message and a model and returns a new/updated model
 function update(msg, model) {
   switch (msg.type) {
     case MSGS.OPEN_POPUP:
