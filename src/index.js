@@ -24,8 +24,14 @@ const MSGS = {
 function view(dispatch, model) {
   return div([
     button({ className: `${btnStyle}`, onclick: () => dispatch(MSGS.OPEN_POPUP) }, "+ Add Flashcard"),
-    model.showPopup ? addCardForm(dispatch, model) : null,
-    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch))
+    model.showPopup ? addCardForm(dispatch, model) : null,// https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Conditional_operator  // si no uso el ? : entonces el popup se ve todo el rato
+
+    div({ className: "flex justify-between w-full px-4 mb-4 mt-4" }, [
+      p({ className: "text-lg font-bold" }, "Your Flashcards"),  
+      p({ className: "text-lg font-bold" }, "Ranking")      
+    ]),
+
+    ...model.cards.map((card, index) => seeCardStyle(card, index, dispatch)) // Itera sobre cada tarjeta y lo pasa a la function (seeCardStyle)
   ]);
 }
 
@@ -35,14 +41,14 @@ function addCardForm(dispatch, model) {
   return div({ className: "fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50" }, [
     form({
       className: "bg-white p-6 rounded-lg",
-      onsubmit: (e) => mangeFormCard(e, dispatch, model)
+      onsubmit: (e) => mangeFormCard(e, dispatch, model) // https://www.designcise.com/web/tutorial/how-to-access-form-control-elements-in-the-onsubmit-event-handler-in-react
     }, [
       label({ className: "block text-sm font-bold mb-2" }, "Question:"),
       input({
         className: "border p-2 w-full mb-4",
         type: "text",
         value: model.newQuestion,
-        oninput: (e) => dispatch({ type: MSGS.UPDATE_QUESTION, value: e.target.value }),
+        oninput: (e) => dispatch({ type: MSGS.UPDATE_QUESTION, value: e.target.value }), // https://developer.mozilla.org/en-US/docs/Web/API/Element/input_event
       }),
       label({ className: "block text-sm font-bold mb-2" }, "Answer:"),
       input({
@@ -61,7 +67,7 @@ function addCardForm(dispatch, model) {
 
 // Function to see the created Card in the html
 function seeCardStyle(card, index, dispatch) {
-  return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/4 relative" }, [
+  return div({ className: "bg-yellow-200 p-4 rounded-lg mt-5 w-1/2 relative" }, [
     button({
       className: "absolute top-2 right-10",
       onclick: () => dispatch({ type: MSGS.EDIT_CARD, card, index }),
@@ -122,7 +128,7 @@ function update(msg, model) {
     case MSGS.DELETE_CARD:
       return {
         ...model,
-        cards: model.cards.filter((_, i) => i !== msg.index)
+        cards: model.cards.filter((_,i) => i !== msg.index) // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
       };
 
     case MSGS.UPDATE_QUESTION:
